@@ -1,8 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
-import App from './App';
-import { createBrowserRouter as Router, Route, createRoutesFromElements, RouterProvider } from 'react-router-dom';
+import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import reportWebVitals from './reportWebVitals';
 import PageNotFound from './pages/PageNotFound';
 import Layout from './layout/Layout';
@@ -15,32 +14,36 @@ import Profile from './pages/Profile';
 import LearnSkills from './pages/LearnSkills';
 import Opportunities from './pages/Opportunities';
 import Discussions from './pages/Discussions';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
-
-const router = new Router(
-  createRoutesFromElements(
-    <Route path='/' exact element={<Layout />}>
-      <Route index element={<Home />} />
-      <Route path="/signin" element={<Signin />} />
-      <Route path="/signup" element={<Signup />} />
-      <Route path="/profile" element={<Profile />} />
-      <Route path="/dashboard" element={<Dashboard />} />
-      <Route path="/careergpt" element={<Careergpt />} />
-      <Route path="/learnskills" element={<LearnSkills />} />
-      <Route path="/opportunities" element={<Opportunities />} />
-      <Route path="/discussions" element={<Discussions />} />
-      <Route path="/*" element={<PageNotFound />} />
-    </Route>
-  )
-);
-
+// ✅ Correct way to create the router
+const router = createBrowserRouter([
+  {
+    path: '/',
+    element: <Layout />,
+    children: [
+      { index: true, element: <Home /> },
+      { path: "signin", element: <Signin /> },
+      { path: "signup", element: <Signup /> },
+      { path: "profile", element: <Profile /> },
+      { path: "dashboard", element: <Dashboard /> },
+      { path: "careergpt", element: <Careergpt /> },
+      { path: "learnskills", element: <LearnSkills /> },
+      { path: "opportunities", element: <Opportunities /> },
+      { path: "discussions", element: <Discussions /> },
+      { path: "*", element: <PageNotFound /> }, // Catch-all for 404
+    ]
+  }
+]);
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
-  <RouterProvider router={router} />
+  <React.StrictMode>
+    <RouterProvider router={router} />
+    <ToastContainer position="top-right" autoClose={3000} hideProgressBar closeOnClick pauseOnHover draggable /> 
+  </React.StrictMode>
 );
 
-// If you want to start measuring performance in your app, pass a function
-// to log results (for example: reportWebVitals(console.log))
-// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
+// Start performance monitoring (optional)
 reportWebVitals();
