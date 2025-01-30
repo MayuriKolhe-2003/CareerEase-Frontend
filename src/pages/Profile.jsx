@@ -16,7 +16,6 @@ const Profile = () => {
     educationLevel: "",
     skills: "",
     targetSkills: "",
-    goals: "",
     locationPreference: "",
     profileImageURL:
       "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQVe5fv0XOW4S3Pmgl-dF9YI4SglGERqaRKbAuW9JYGHsr_xqUfpl0o_JNtzRV_GUTLap0&usqp=CAU",
@@ -26,24 +25,25 @@ const Profile = () => {
   const userId = localStorage.getItem("userId");
   const [selectedImage, setSelectedImage] = useState();
   // Fetch user profile on page load
-  useEffect(() => {
-    async function fetchProfile() {
-      try {
-        const response = await axios.get(`/user/${userId}`, {
-          withCredentials: true,
-        });
-        let userData = response.data;
+  const fetchProfile = async () => {
+    try {
+      const response = await axios.get(`/user/${userId}`, {
+        withCredentials: true,
+      });
+      let userData = response.data;
 
-        // ✅ Convert birthdate from ISO to "YYYY-MM-DD"
-        if (userData.birthdate) {
-          userData.birthdate = userData.birthdate.split("T")[0]; // Extract only YYYY-MM-DD
-        }
-
-        setFormData(userData);
-      } catch (error) {
-        toast.error("Error fetching profile data.");
+      // ✅ Convert birthdate from ISO to "YYYY-MM-DD"
+      if (userData.birthdate) {
+        userData.birthdate = userData.birthdate.split("T")[0]; // Extract only YYYY-MM-DD
       }
+
+      setFormData(userData);
+    } catch (error) {
+      toast.error("Error fetching profile data.");
     }
+  }
+  useEffect(() => {
+   
     fetchProfile();
   }, []);
 
@@ -66,23 +66,18 @@ const Profile = () => {
     setLoading(true);
 
     try {
-      const formDataToSend = new FormData();
-      Object.keys(formData).forEach((key) => {
-        if (formData[key]) formDataToSend.append(key, formData[key]);
-      });
-
       // Append profile image if updated
-      if (selectedImage) {
-        formDataToSend.append("profileImage", selectedImage);
-      }
+      // if (selectedImage) {
+      //   formDataToSend.append("profileImage", selectedImage);
+      // }
 
-      const response = await axios.patch(`/user/${userId}`, formDataToSend, {
+      const response = await axios.patch(`/user/${userId}`, formData, {
         withCredentials: true,
         headers: { "Content-Type": "multipart/form-data" },
       });
 
       toast.success("Profile updated successfully!");
-      setFormData(response.data.user);
+      fetchProfile();
     } catch (error) {
       toast.error("Error updating profile.");
     } finally {
