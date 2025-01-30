@@ -7,12 +7,28 @@ import reportWebVitals from './reportWebVitals';
 import PageNotFound from './pages/PageNotFound';
 import Layout from './layout/Layout';
 import Home from './pages/Home';
+import Signin from './pages/Signin';
+import Signup from './pages/Signup';
+import Dashboard from './pages/Dashboard';
+import Careergpt from './pages/Careergpt';
+import Profile from './pages/Profile';
+import LearnSkills from './pages/LearnSkills';
+import Opportunities from './pages/Opportunities';
+import Discussions from './pages/Discussions';
 
 
 const router = new Router(
   createRoutesFromElements(
     <Route path='/' exact element={<Layout />}>
       <Route index element={<Home />} />
+      <Route path="/signin" element={<Signin />} />
+      <Route path="/signup" element={<Signup />} />
+      <Route path="/profile" element={<Profile />} />
+      <Route path="/dashboard" element={<Dashboard />} />
+      <Route path="/careergpt" element={<Careergpt />} />
+      <Route path="/learnskills" element={<LearnSkills />} />
+      <Route path="/opportunities" element={<Opportunities />} />
+      <Route path="/discussions" element={<Discussions />} />
       <Route path="/*" element={<PageNotFound />} />
     </Route>
   )

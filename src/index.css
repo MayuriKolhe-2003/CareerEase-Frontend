@@ -15,3 +15,23 @@ code {
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+
+/* Custom Scrollbar Styles */
+.scrollbar-custom::-webkit-scrollbar {
+  height: 8px; /* Adjust height for horizontal scrolling */
+}
+
+.scrollbar-custom::-webkit-scrollbar-thumb {
+  background-color: #b82370; /* Primary Red */
+  border-radius: 10px;
+}
+
+.scrollbar-custom::-webkit-scrollbar-thumb:hover {
+  background-color: #b82370; /* Darker shade on hover */
+}
+
+.scrollbar-custom::-webkit-scrollbar-track {
+  background-color: #f3f4f6; /* Light gray track */
+  border-radius: 10px;
+}

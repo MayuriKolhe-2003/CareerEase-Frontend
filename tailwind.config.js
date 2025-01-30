@@ -1,3 +1,5 @@
+const { light } = require('@mui/material/styles/createPalette');
+
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   content: [
@@ -7,6 +9,8 @@ module.exports = {
     extend: {
       colors: {
         primaryRed: '#b82370',
+        light_primaryRed: '#fc9dce',
+        dark :  '#131318'
       }
     },
   },

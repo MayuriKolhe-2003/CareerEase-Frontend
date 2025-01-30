@@ -6,9 +6,12 @@ const Layout = () => {
   return (
     <div>
       <Navbar />
-      <Suspense fallback={<div>Loading...</div>}>
-        <Outlet />
-      </Suspense>
+      {/* Ensure content starts below the fixed navbar */}
+      <main className="pt-16">  
+        <Suspense fallback={<div>Loading...</div>}>
+          <Outlet />
+        </Suspense>
+      </main>
     </div>
   );
 };
