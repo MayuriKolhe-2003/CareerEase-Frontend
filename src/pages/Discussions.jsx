@@ -3,7 +3,14 @@ import axios from "../axios";
 import { FaUserCircle } from "react-icons/fa";
 import { toast } from "react-toastify";
 
-const categories = ["Technology", "Career", "Education", "AI & ML", "Startup", "General"];
+const categories = [
+  "Technology",
+  "Career",
+  "Education",
+  "AI & ML",
+  "Startup",
+  "General",
+];
 
 const AddDiscussionModal = ({ onClose, onAddDiscussion }) => {
   const [discussion, setDiscussion] = useState({
@@ -33,22 +40,41 @@ const AddDiscussionModal = ({ onClose, onAddDiscussion }) => {
           placeholder="Discussion Title"
           className="w-full border rounded-lg p-2 mb-2"
           value={discussion.title}
-          onChange={(e) => setDiscussion({ ...discussion, title: e.target.value })}
+          onChange={(e) =>
+            setDiscussion({ ...discussion, title: e.target.value })
+          }
         />
         <textarea
           placeholder="Discussion Content"
           className="w-full border rounded-lg p-2 mb-2"
           value={discussion.content}
           rows="4"
-          onChange={(e) => setDiscussion({ ...discussion, content: e.target.value })}
+          onChange={(e) =>
+            setDiscussion({ ...discussion, content: e.target.value })
+          }
         ></textarea>
-        
+
         {/* Image Upload */}
-        <input type="file" accept="image/*" className="w-full mb-4" onChange={handleFileChange} />
+        <input
+          type="file"
+          accept="image/*"
+          className="w-full mb-4"
+          onChange={handleFileChange}
+        />
 
         <div className="flex justify-between">
-          <button onClick={handleSubmit} className="bg-green-500 text-white px-4 py-2 rounded-lg">Start</button>
-          <button onClick={onClose} className="bg-gray-500 text-white px-4 py-2 rounded-lg">Cancel</button>
+          <button
+            onClick={handleSubmit}
+            className="bg-green-500 text-white px-4 py-2 rounded-lg"
+          >
+            Start
+          </button>
+          <button
+            onClick={onClose}
+            className="bg-gray-500 text-white px-4 py-2 rounded-lg"
+          >
+            Cancel
+          </button>
         </div>
       </div>
     </div>
@@ -62,16 +88,16 @@ const Discussion = () => {
   const [showModal, setShowModal] = useState(false);
   const [commentText, setCommentText] = useState("");
   const [commentImage, setCommentImage] = useState(null);
-  
-  
-  
+
   const userId = localStorage.getItem("userId");
 
   // Fetch Discussions
   const fetchDiscussions = async () => {
     try {
-      const response = await axios.get(`/discussion`, { withCredentials: true });
-      console.log(response)
+      const response = await axios.get(`/discussion`, {
+        withCredentials: true,
+      });
+      console.log(response);
       setDiscussions(response.data.allPosts);
     } catch (error) {
       toast.error("Error fetching discussions.");
@@ -90,21 +116,19 @@ const Discussion = () => {
       if (discussion.postImage) {
         formData.append("postImage", discussion.postImage); // Attach image if provided
       }
-  
-      const response = await axios.post(
-        `/discussion`, 
-        formData,
-        { 
-          headers: { "Content-Type": "multipart/form-data" }, 
-          withCredentials: true 
-        }
-      );
-  
+
+      const response = await axios.post(`/discussion`, formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+        withCredentials: true,
+      });
+
       toast.success("Discussion started successfully!");
       fetchDiscussions(); // Refresh discussions
     } catch (error) {
       console.error("Error starting discussion:", error);
-      toast.error(error.response?.data?.message || "Error starting discussion.");
+      toast.error(
+        error.response?.data?.message || "Error starting discussion."
+      );
     } finally {
       setShowModal(false);
     }
@@ -119,15 +143,19 @@ const Discussion = () => {
 
     try {
       const formData = new FormData();
-      formData.append("text", commentText);
+      formData.append("content", commentText);
       if (commentImage) {
-        formData.append("commentImage", commentImage);
+        formData.append("postImage", commentImage);
       }
 
-      await axios.post(`/discussion/${selectedDiscussion._id}/comment/`, formData, {
-        headers: { "Content-Type": "multipart/form-data" },
-        withCredentials: true,
-      });
+      await axios.post(
+        `/discussion/${selectedDiscussion._id}/comment/`,
+        formData,
+        {
+          headers: { "Content-Type": "multipart/form-data" },
+          withCredentials: true,
+        }
+      );
 
       toast.success("Comment posted successfully!");
       setCommentText("");
@@ -142,18 +170,21 @@ const Discussion = () => {
     setCommentImage(e.target.files[0]);
   };
 
-  
-
+  console.log(selectedDiscussion?.comments);
   return (
     <div className="min-h-screen bg-gray-100 p-14">
-      <h2 className="text-3xl font-bold text-center text-dark mb-6">💬 Discussions</h2>
+      <h2 className="text-3xl font-bold text-center text-dark mb-6">
+        💬 Discussions
+      </h2>
 
       {/* Start New Discussion Button */}
       <div className="flex justify-between mb-6">
         <div className="flex space-x-3 overflow-x-auto scrollbar-hide">
           <button
             className={`px-4 py-2 text-sm rounded-full ${
-              selectedCategory === "All" ? "bg-primaryRed text-white" : "bg-gray-200 text-gray-700"
+              selectedCategory === "All"
+                ? "bg-primaryRed text-white"
+                : "bg-gray-200 text-gray-700"
             }`}
             onClick={() => setSelectedCategory("All")}
           >
@@ -163,7 +194,9 @@ const Discussion = () => {
             <button
               key={category}
               className={`px-4 py-2 text-sm rounded-full ${
-                selectedCategory === category ? "bg-primaryRed text-white" : "bg-gray-200 text-gray-700"
+                selectedCategory === category
+                  ? "bg-primaryRed text-white"
+                  : "bg-gray-200 text-gray-700"
               }`}
               onClick={() => setSelectedCategory(category)}
             >
@@ -171,7 +204,10 @@ const Discussion = () => {
             </button>
           ))}
         </div>
-        <button onClick={() => setShowModal(true)} className="bg-primaryRed text-white px-4 py-2 rounded-lg">
+        <button
+          onClick={() => setShowModal(true)}
+          className="bg-primaryRed text-white px-4 py-2 rounded-lg"
+        >
           ➕ Start New Discussion
         </button>
       </div>
@@ -179,7 +215,11 @@ const Discussion = () => {
       {/* Discussion List */}
       <div className="space-y-6">
         {discussions
-          .filter((discussion) => selectedCategory === "All" || discussion.category === selectedCategory)
+          .filter(
+            (discussion) =>
+              selectedCategory === "All" ||
+              discussion.category === selectedCategory
+          )
           .map((discussion) => (
             <div
               key={discussion.id}
@@ -187,14 +227,29 @@ const Discussion = () => {
               onClick={() => setSelectedDiscussion(discussion)}
             >
               <div className="flex items-center space-x-3 mb-2">
-                {discussion.avatar ? (
-                  <img src={discussion.avatar} alt={discussion.user} className="w-10 h-10 rounded-full" />
+                {discussion.createdBy.profileImageURL ? (
+                  <img
+                    src={discussion.createdBy.profileImageURL}
+                    alt={discussion.createdBy.fullName}
+                    className="w-10 h-10 rounded-full"
+                  />
                 ) : (
                   <FaUserCircle className="w-10 h-10 text-gray-500" />
                 )}
-                <div>
-                  <p className="text-gray-700 font-semibold">{discussion.user}</p>
-                  <p className="text-xs text-gray-500">{discussion.date}</p>
+                <div className="flex flex-col">
+                  <p className="text-gray-700 font-semibold">
+                    {discussion.createdBy.fullName}
+                  </p>
+                  <p className="text-xs text-gray-400">
+                    {new Date(discussion.createdAt).toLocaleString("en-US", {
+                      year: "numeric",
+                      month: "2-digit",
+                      day: "2-digit",
+                      hour: "2-digit",
+                      minute: "2-digit",
+                      hour12: true, // Use 24-hour format; set to `true` for 12-hour format
+                    })}
+                  </p>
                 </div>
               </div>
               <h4 className="text-lg font-semibold">{discussion.title}</h4>
@@ -204,65 +259,120 @@ const Discussion = () => {
       </div>
 
       {/* Add Discussion Modal */}
-      {showModal && <AddDiscussionModal onClose={() => setShowModal(false)} onAddDiscussion={addDiscussion} />}
+      {showModal && (
+        <AddDiscussionModal
+          onClose={() => setShowModal(false)}
+          onAddDiscussion={addDiscussion}
+        />
+      )}
 
       {/* Discussion Details Modal */}
       {selectedDiscussion && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4">
-          <div className="bg-white rounded-lg shadow-lg max-w-lg w-full p-6">
-            <div className="flex justify-between items-center">
-              <h3 className="text-xl font-semibold">{selectedDiscussion.title}</h3>
-              <button onClick={() => setSelectedDiscussion(null)} className="text-gray-500 hover:text-dark">✖</button>
+        <div className="bg-white rounded-lg shadow-lg max-w-2xl w-full p-6 
+                        max-h-[80vh] overflow-y-auto">
+          {/* Header Section */}
+          <div className="flex justify-between items-center">
+            <h3 className="text-xl font-semibold">{selectedDiscussion.title}</h3>
+            <button
+              onClick={() => setSelectedDiscussion(null)}
+              className="text-gray-500 hover:text-dark"
+            >
+              ✖
+            </button>
+          </div>
+      
+          {/* Content Section */}
+          <p className="text-sm text-gray-600 mt-2">{selectedDiscussion.content}</p>
+      
+          {/* Image Section */}
+          {selectedDiscussion.imageURL && (
+            <div>
+              <img src={selectedDiscussion.imageURL} className="w-1/2 max-h-32" />
             </div>
-            <p className="text-sm text-gray-600 mt-2">{selectedDiscussion.content}</p>
-
-            {/* Comments Section */}
-            <h4 className="mt-4 text-lg font-semibold">Comments</h4>
-            <div className="space-y-3 mt-3">
-              {selectedDiscussion.comments.length > 0 ? (
-                selectedDiscussion.comments.map((comment, index) => (
-                  <div key={index} className="flex items-start space-x-3">
-                    <div className="bg-gray-100 p-3 rounded-lg w-full">
-                      <p className="text-sm font-semibold">{comment.createdBy?.name || "Anonymous"}</p>
-                      <p className="text-sm text-gray-700">{comment.text}</p>
-                      {comment.imageURL && <img src={comment.imageURL} alt="Comment" className="mt-2 rounded-lg w-32" />}
+          )}
+      
+          {/* Comments Section */}
+          <h4 className="mt-4 text-lg font-semibold">Comments</h4>
+          <div className="space-y-3 mt-3">
+            {selectedDiscussion.comments.length > 0 ? (
+              selectedDiscussion.comments.map((comment, index) => (
+                <div key={index} className="flex items-start space-x-3">
+                  <div className="bg-gray-100 p-3 rounded-lg w-full">
+                    <div className="flex items-center space-x-3">
+                      {comment.createdBy.profileImageURL ? (
+                        <img
+                          src={comment.createdBy.profileImageURL}
+                          alt={comment.createdBy.fullName || "img"}
+                          className="w-10 h-10 rounded-full"
+                        />
+                      ) : (
+                        <FaUserCircle className="w-10 h-10 text-gray-500" />
+                      )}
+                      <div className="flex flex-col">
+                        <p className="text-sm font-semibold">
+                          {comment.createdBy?.fullName || "Anonymous"}
+                        </p>
+                        <p className="text-xs text-gray-400">
+                          {new Date(comment.createdAt).toLocaleString("en-US", {
+                            year: "numeric",
+                            month: "2-digit",
+                            day: "2-digit",
+                            hour: "2-digit",
+                            minute: "2-digit",
+                            hour12: true,
+                          })}
+                        </p>
+                      </div>
                     </div>
+                    <p className="text-sm ml-2 mt-1 text-gray-700">{comment.content}</p>
+                    {comment.imageURL && (
+                      <img
+                        src={comment.imageURL}
+                        alt="Comment"
+                        className="mt-2 rounded-lg w-1/2"
+                      />
+                    )}
                   </div>
-                ))
-              ) : (
-                <p className="text-gray-500">No comments yet.</p>
-              )}
-            </div>
-
-            {/* Add Comment Form */}
-            <div className="mt-4">
-              <h4 className="text-md font-semibold text-dark">Post a Comment</h4>
-              <textarea
-                className="w-full border rounded-lg p-2 mt-2"
-                placeholder="Write a comment..."
-                value={commentText}
-                onChange={(e) => setCommentText(e.target.value)}
+                </div>
+              ))
+            ) : (
+              <p className="text-gray-500">No comments yet.</p>
+            )}
+          </div>
+      
+          {/* Add Comment Form */}
+          <div className="mt-4 border border-gray-300 p-4">
+            <h4 className="text-md font-semibold text-dark">Post a Comment</h4>
+            <textarea
+              className="w-full border rounded-lg p-2 mt-2"
+              placeholder="Write a comment..."
+              value={commentText}
+              onChange={(e) => setCommentText(e.target.value)}
+            />
+            <div className="flex items-center">
+              <input
+                type="file"
+                accept="image/*"
+                className="w-full mt-2"
+                onChange={handleCommentImageChange}
               />
-              <input type="file" accept="image/*" className="w-full mt-2" onChange={handleCommentImageChange} />
-              <button onClick={postComment} className="mt-2 bg-green-500 text-white px-4 py-2 rounded-lg w-full">
+              <button
+                onClick={postComment}
+                className="mt-2 bg-green-500 text-white px-3 py-2 rounded-lg w-full"
+              >
                 Post Comment
               </button>
             </div>
-
-            {/* Close Button */}
-            <button onClick={() => setSelectedDiscussion(null)} className="mt-4 bg-primaryRed text-white px-4 py-2 rounded-lg w-full">
-              Close
-            </button>
           </div>
         </div>
+      </div>
+      
       )}
     </div>
   );
 };
 
-
-
 /* Add Discussion Modal */
-
 
 export default Discussion;

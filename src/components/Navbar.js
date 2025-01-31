@@ -1,18 +1,28 @@
-import React, { useState, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import Cookies from "js-cookie"; // Import for cookie handling
+import React, { useState, useEffect, useRef } from "react";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 
 const Navbar = () => {
   const navigate = useNavigate();
+  const location = useLocation(); // Get current route
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const dropdownRef = useRef(null); // Reference for dropdown
 
   useEffect(() => {
-    // Check if authToken exists in cookies
+    // Check if user is authenticated
     const token = localStorage.getItem("userId");
-    console.log(token);
+    setIsAuthenticated(!!token);
+  }, []);
 
-    setIsAuthenticated(!!token); // Set true if token exists, otherwise false
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    function handleClickOutside(event) {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setDropdownOpen(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
   return (
@@ -30,11 +40,11 @@ const Navbar = () => {
           </span>
         </a>
 
-        {/* Sign In & Profile Section */}
+        {/* Profile Section */}
         <div className="flex md:order-2 space-x-3 md:space-x-0 rtl:space-x-reverse items-center">
           {isAuthenticated ? (
-            // Profile Picture with Dropdown (When Logged In)
-            <div className="relative">
+            // Profile Picture with Dropdown
+            <div className="relative" ref={dropdownRef}>
               <button
                 onClick={() => setDropdownOpen(!dropdownOpen)}
                 className="flex items-center space-x-2"
@@ -53,7 +63,8 @@ const Navbar = () => {
                     <li>
                       <Link
                         to="/profile"
-                        className="block px-4 py-2 text-white "
+                        className="block px-4 py-2 text-white"
+                        onClick={() => setDropdownOpen(false)} // Close on click
                       >
                         Profile
                       </Link>
@@ -61,8 +72,9 @@ const Navbar = () => {
                     <li>
                       <button
                         onClick={() => {
-                          localStorage.removeItem("userId") // Remove token
-                          navigate("/"); // Refresh to update UI
+                          localStorage.removeItem("userId");
+                          navigate("/");
+                          setDropdownOpen(false);
                         }}
                         className="w-full text-left px-4 py-2 text-white"
                       >
@@ -90,47 +102,26 @@ const Navbar = () => {
           id="navbar-sticky"
         >
           <ul className="flex flex-col p-4 md:p-0 mt-4 font-medium border border-gray-100 rounded-lg bg-dark md:space-x-8 rtl:space-x-reverse md:flex-row md:mt-0 md:border-0 dark:border-gray-700">
-            <li>
-              <Link
-                to="/dashboard"
-                className="block py-2 px-3 text-white bg-primaryRed rounded-sm md:bg-transparent md:text-primaryRed md:p-0 md:dark:text-primaryRed"
-                aria-current="page"
-              >
-                Dashboard
-              </Link>
-            </li>
-            <li>
-              <Link
-                to="/careergpt"
-                className="block py-2 px-3 text-gray-900 rounded-sm hover:bg-gray-100 md:hover:bg-transparent md:hover:text-primaryRed md:p-0 md:dark:hover:text-primaryRed dark:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700"
-              >
-                CareerGPT
-              </Link>
-            </li>
-            <li>
-              <Link
-                to="/learnskills"
-                className="block py-2 px-3 text-gray-900 rounded-sm hover:bg-gray-100 md:hover:bg-transparent md:hover:text-primaryRed md:p-0 md:dark:hover:text-primaryRed dark:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700"
-              >
-                Learn Skills
-              </Link>
-            </li>
-            <li>
-              <Link
-                to="/opportunities"
-                className="block py-2 px-3 text-gray-900 rounded-sm hover:bg-gray-100 md:hover:bg-transparent md:hover:text-primaryRed md:p-0 md:dark:hover:text-primaryRed dark:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700"
-              >
-                Explore Opportunities
-              </Link>
-            </li>
-            <li>
-              <Link
-                to="/discussions"
-                className="block py-2 px-3 text-gray-900 rounded-sm hover:bg-gray-100 md:hover:bg-transparent md:hover:text-primaryRed md:p-0 md:dark:hover:text-primaryRed dark:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700"
-              >
-                Discussions
-              </Link>
-            </li>
+            {[
+              { path: "/dashboard", name: "Dashboard" },
+              { path: "/careergpt", name: "CareerGPT" },
+              { path: "/learnskills", name: "Learn Skills" },
+              { path: "/opportunities", name: "Explore Opportunities" },
+              { path: "/discussions", name: "Discussions" },
+            ].map((link) => (
+              <li key={link.path}>
+                <Link
+                  to={link.path}
+                  className={`block py-2 px-3 rounded-sm md:p-0 ${
+                    location.pathname === link.path
+                      ? "text-primaryRed font-semibold"
+                      : "text-white hover:text-primaryRed"
+                  }`}
+                >
+                  {link.name}
+                </Link>
+              </li>
+            ))}
           </ul>
         </div>
       </div>
