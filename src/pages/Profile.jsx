@@ -12,7 +12,7 @@ const Profile = () => {
     city: "",
     state: "",
     country: "",
-    yearOfExperience: "",
+    yearOfExperience: 0,
     educationLevel: "",
     skills: "",
     targetSkills: "",
@@ -64,26 +64,46 @@ const Profile = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-
+  
     try {
-      // Append profile image if updated
-      // if (selectedImage) {
-      //   formDataToSend.append("profileImage", selectedImage);
-      // }
-
-      const response = await axios.patch(`/user/${userId}`, formData, {
+      // Create FormData to send text and image together
+      const formDataToSend = new FormData();
+      formDataToSend.append("fullName", formData.fullName);
+      formDataToSend.append("email", formData.email);
+      formDataToSend.append("birthdate", formData.birthdate);
+      formDataToSend.append("college", formData.college);
+      formDataToSend.append("city", formData.city);
+      formDataToSend.append("state", formData.state);
+      formDataToSend.append("country", formData.country);
+      formDataToSend.append("yearOfExperience", formData.yearOfExperience);
+      formDataToSend.append("educationLevel", formData.educationLevel);
+      formDataToSend.append("skills", formData.skills);
+      formDataToSend.append("targetSkills", formData.targetSkills);
+      formDataToSend.append("locationPreference", formData.locationPreference);
+  
+      // Append the image as `postImage`
+      if (selectedImage) {
+        formDataToSend.append("profileImage", selectedImage); 
+      }
+  
+      // Make API call
+      const response = await axios.patch(`/user/${userId}`, formDataToSend, {
         withCredentials: true,
         headers: { "Content-Type": "multipart/form-data" },
       });
-
+  
       toast.success("Profile updated successfully!");
-      fetchProfile();
+      fetchProfile(); // Refresh the profile data
     } catch (error) {
       toast.error("Error updating profile.");
     } finally {
       setLoading(false);
     }
   };
+
+ 
+  
+  
 
   return (
     <div className="min-h-screen bg-gray-100 flex justify-center py-10">
@@ -209,18 +229,32 @@ const Profile = () => {
                 onChange={handleChange}
               />
               {/* <InputField label="Career Goal" name="goals" value={formData.goals} onChange={handleChange} /> */}
-              <InputField
-                label="Education Level"
-                name="educationLevel"
-                value={formData.educationLevel}
-                onChange={handleChange}
-              />
-              <InputField
-                label="Location Preference"
-                name="locationPreference"
-                value={formData.locationPreference}
-                onChange={handleChange}
-              />
+              <DropdownField
+      label="Education Level"
+      name="educationLevel"
+      value={formData.educationLevel}
+      onChange={handleChange}
+      options={[
+        "High School",
+        "Associate Degree",
+        "Bachelor's Degree",
+        "Master's Degree",
+        "Doctorate (PhD)",
+        "Other"
+      ]}
+    />
+
+<DropdownField
+      label="Location Preference"
+      name="locationPreference"
+      value={formData.locationPreference}
+      onChange={handleChange}
+      options={[
+        "Remote",
+        "On-Site",
+        "Hybrid"
+      ]}
+    />
             </div>
           </ProfileCard>
 
@@ -239,6 +273,26 @@ const Profile = () => {
     </div>
   );
 };
+
+const DropdownField = ({ label, name, value, onChange, options }) => (
+  <div>
+    <label className="block text-gray-600">{label}</label>
+    <select
+      name={name}
+      value={value}
+      onChange={onChange}
+      className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring focus:ring-light_primaryRed"
+    >
+      <option value="">Select {label}</option>
+      {options.map((option, index) => (
+        <option key={index} value={option}>
+          {option}
+        </option>
+      ))}
+    </select>
+  </div>
+);
+
 
 /* Reusable Profile Card Component */
 const ProfileCard = ({ title, children }) => (

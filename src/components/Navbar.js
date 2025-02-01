@@ -5,25 +5,28 @@ const Navbar = () => {
   const navigate = useNavigate();
   const location = useLocation(); // Get current route
   const [dropdownOpen, setDropdownOpen] = useState(false);
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(!!localStorage.getItem("userId"));
   const dropdownRef = useRef(null); // Reference for dropdown
 
   useEffect(() => {
-    // Check if user is authenticated
-    const token = localStorage.getItem("userId");
-    setIsAuthenticated(!!token);
-  }, []);
+    // Listen for authentication changes (e.g., login/logout)
+    const handleStorageChange = () => {
+      setIsAuthenticated(!!localStorage.getItem("userId"));
+    };
 
-  // Close dropdown when clicking outside
-  useEffect(() => {
-    function handleClickOutside(event) {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
-        setDropdownOpen(false);
-      }
-    }
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, []);
+    // Add event listener for changes in localStorage
+    window.addEventListener("storage", handleStorageChange);
+
+    return () => {
+      window.removeEventListener("storage", handleStorageChange);
+    };
+  }, [location]);
+
+  const handleLogout = () => {
+    localStorage.removeItem("userId");
+    setIsAuthenticated(false); // Update state
+    navigate("/");
+  };
 
   return (
     <nav className="bg-white dark:bg-dark fixed w-full z-20 top-0 start-0 border-b border-gray-200 dark:border-gray-600 mb-40">
@@ -64,18 +67,14 @@ const Navbar = () => {
                       <Link
                         to="/profile"
                         className="block px-4 py-2 text-white"
-                        onClick={() => setDropdownOpen(false)} // Close on click
+                        onClick={() => setDropdownOpen(false)}
                       >
                         Profile
                       </Link>
                     </li>
                     <li>
                       <button
-                        onClick={() => {
-                          localStorage.removeItem("userId");
-                          navigate("/");
-                          setDropdownOpen(false);
-                        }}
+                        onClick={handleLogout}
                         className="w-full text-left px-4 py-2 text-white"
                       >
                         Logout
@@ -90,6 +89,7 @@ const Navbar = () => {
             <Link
               to="/signin"
               className="text-white bg-primaryRed hover:bg-primaryRed focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 text-center dark:bg-primaryRed dark:hover:bg-primaryRed dark:focus:ring-primaryRed"
+              onClick={() => setIsAuthenticated(!!localStorage.getItem("userId"))} // Update after login
             >
               Sign In
             </Link>
