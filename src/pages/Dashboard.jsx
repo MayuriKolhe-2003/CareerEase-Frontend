@@ -12,6 +12,7 @@ import "react-toastify/dist/ReactToastify.css";
 import Goals from "../components/Goals";
 import { Line, Pie } from "react-chartjs-2";
 import { Chart, registerables } from "chart.js";
+import Roadmap from "../components/RoadMap";
 
 Chart.register(...registerables);
 
@@ -34,14 +35,13 @@ const Dashboard = () => {
 
        {/* Insight Cards */}
        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 mb-6">
-        <Card title="Total Users" value="1,250" icon={<FiUsers className="text-white text-3xl" />} color="bg-primaryRed" />
-        <Card title="Daily Sessions" value="325" icon={<FiBarChart2 className="text-white text-3xl" />} color="bg-green-500" />
-        <Card title="New Queries" value="68" icon={<FiMessageSquare className="text-white text-3xl" />} color="bg-yellow-500" />
-        <Card title="Avg. Session Time" value="45 min" icon={<FiClock className="text-white text-3xl" />} color="bg-red-500" />
+        <Card title="Goal Completion Rate" value="1,250" icon={<FiUsers className="text-white text-3xl" />} color="bg-primaryRed" />
+        <Card title="Daily Challanges Completed" value="325" icon={<FiBarChart2 className="text-white text-3xl" />} color="bg-green-500" />
+        <Card title="Courses and Lessons Completed" value="68" icon={<FiMessageSquare className="text-white text-3xl" />} color="bg-yellow-500" />
+        <Card title="Job Applications" value="45 min" icon={<FiClock className="text-white text-3xl" />} color="bg-red-500" />
       </div>
 
-\
-
+      <Roadmap />
       <Goals />
 
       {/* Charts */}
