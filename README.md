@@ -14,6 +14,18 @@ CareerEase is an AI-powered career counseling platform that helps users plan the
 - 🤖 **Career GPT** - AI-powered career guidance chatbot.
 - 💬 **Discussion Forum** - Community discussions, adding posts, and commenting on discussions.
 
+
+
+---
+
+## 🌐 Live Demo
+
+🔗 **Hosted Link:** [CareerEase Live](https://career-ease-frontend.vercel.app/)
+
+📝 **Demo Credentials:**
+- **Username:** test4@gmail.com
+- **Password:** test@123
+
 ---
 
 ## 📸 Screenshots
