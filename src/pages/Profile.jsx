@@ -41,9 +41,8 @@ const Profile = () => {
     } catch (error) {
       toast.error("Error fetching profile data.");
     }
-  }
+  };
   useEffect(() => {
-   
     fetchProfile();
   }, []);
 
@@ -64,7 +63,7 @@ const Profile = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-  
+
     try {
       // Create FormData to send text and image together
       const formDataToSend = new FormData();
@@ -80,18 +79,18 @@ const Profile = () => {
       formDataToSend.append("skills", formData.skills);
       formDataToSend.append("targetSkills", formData.targetSkills);
       formDataToSend.append("locationPreference", formData.locationPreference);
-  
+
       // Append the image as `postImage`
       if (selectedImage) {
-        formDataToSend.append("profileImage", selectedImage); 
+        formDataToSend.append("profileImage", selectedImage);
       }
-  
+
       // Make API call
       const response = await axios.patch(`/user/${userId}`, formDataToSend, {
         withCredentials: true,
         headers: { "Content-Type": "multipart/form-data" },
       });
-  
+
       toast.success("Profile updated successfully!");
       fetchProfile(); // Refresh the profile data
     } catch (error) {
@@ -100,10 +99,6 @@ const Profile = () => {
       setLoading(false);
     }
   };
-
- 
-  
-  
 
   return (
     <div className="min-h-screen bg-gray-100 flex justify-center py-10">
@@ -221,40 +216,49 @@ const Profile = () => {
                 value={formData.targetSkills}
                 onChange={handleChange}
               />
+
+              {/* <InputField label="Career Goal" name="goals" value={formData.goals} onChange={handleChange} /> */}
+              <DropdownField
+                label="Education Level"
+                name="educationLevel"
+                value={formData.educationLevel}
+                onChange={handleChange}
+                options={[
+                  "High School",
+                  "Associate Degree",
+                  "Bachelor's Degree",
+                  "Master's Degree",
+                  "Doctorate (PhD)",
+                  "Other",
+                ]}
+              />
+
               <InputField
-                label="Years of Experience"
+                label="Years of Study"
                 name="yearOfExperience"
                 type="number"
                 value={formData.yearOfExperience}
                 onChange={handleChange}
               />
-              {/* <InputField label="Career Goal" name="goals" value={formData.goals} onChange={handleChange} /> */}
-              <DropdownField
-      label="Education Level"
-      name="educationLevel"
-      value={formData.educationLevel}
-      onChange={handleChange}
-      options={[
-        "High School",
-        "Associate Degree",
-        "Bachelor's Degree",
-        "Master's Degree",
-        "Doctorate (PhD)",
-        "Other"
-      ]}
-    />
 
-<DropdownField
-      label="Location Preference"
-      name="locationPreference"
-      value={formData.locationPreference}
-      onChange={handleChange}
-      options={[
-        "Remote",
-        "On-Site",
-        "Hybrid"
-      ]}
-    />
+              <DropdownField
+                label="Location Preference"
+                name="locationPreference"
+                value={formData.locationPreference}
+                onChange={handleChange}
+                options={["Remote", "On-Site", "Hybrid"]}
+              />
+            </div>
+          </ProfileCard>
+
+          {/* Resume Upload Card */}
+          <ProfileCard title="Upload Resume">
+            <div className="grid gap-4">
+              <InputField
+                label="Upload Your Resume"
+                name="resume"
+                type="file"
+              />
             </div>
           </ProfileCard>
 
@@ -292,7 +296,6 @@ const DropdownField = ({ label, name, value, onChange, options }) => (
     </select>
   </div>
 );
-
 
 /* Reusable Profile Card Component */
 const ProfileCard = ({ title, children }) => (
