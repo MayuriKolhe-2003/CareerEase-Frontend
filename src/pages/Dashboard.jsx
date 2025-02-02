@@ -47,7 +47,7 @@ const Dashboard = () => {
       {/* Charts */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
         {/* Line Chart for Weekly Sessions */}
-        {/* <div className="bg-white shadow-md rounded-lg p-6">
+        <div className="bg-white shadow-md rounded-lg p-6">
           <h3 className="text-xl font-semibold text-dark mb-4">Weekly Sessions</h3>
           <Line
             data={{
@@ -63,10 +63,10 @@ const Dashboard = () => {
               ],
             }}
           />
-        </div> */}
+        </div>
 
         {/* Pie Chart for Session Types */}
-        {/* <div className="bg-white shadow-md rounded-lg p-6">
+        <div className="bg-white shadow-md rounded-lg p-6">
           <h3 className="text-xl font-semibold text-dark mb-4">Session Distribution</h3>
           <Pie
             data={{
@@ -79,7 +79,7 @@ const Dashboard = () => {
               ],
             }}
           />
-        </div> */}
+        </div>
       </div>
 
       

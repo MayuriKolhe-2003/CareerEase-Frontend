@@ -1,21 +1,9 @@
 import React,{useEffect, useState} from "react";
 import { blogData, courseData } from "../Data";
 import CourseCard from "../components/CourseCard";
-import { fetchYouTubePlaylists } from "../components/YoutubeApi";
-
 const LearnSkills = () => {
-  const [playlists, setPlaylists] = useState([]);
 
-  useEffect(() => {
-    const getPlaylists = async () => {
-      const fetchedPlaylists = await fetchYouTubePlaylists("react");
-      setPlaylists(fetchedPlaylists);
-    };
 
-    getPlaylists();
-  }, []);
-
-  console.log(playlists)
   return (
     <div className="min-h-screen bg-gray-100 p-14">
       <h2 className="text-3xl text-center font-bold text-dark mb-6"> 🎯 Learn Skills</h2>
