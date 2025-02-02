@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import axios from "../axios";
+import ReactMarkdown from "react-markdown";
 
 const Carrergpt = () => {
   const [messages, setMessages] = useState([]);
@@ -38,7 +39,7 @@ const Carrergpt = () => {
       // });
 
       const response = await axios.post(
-        "/chat", // Endpoint URL
+        "/careergpt/chat", // Endpoint URL
         { userPrompt: messageText }, // Request body (no need for `body` key or `JSON.stringify`)
         {
           headers: {
@@ -47,18 +48,20 @@ const Carrergpt = () => {
         }
       );
 
-      if (!response.ok) {
-        throw new Error("Network response was not ok");
-      }
+      console.log(response.data.botResponse);
 
-      const responseData = await response.json();
+      // if (!response.ok) {
+      //   throw new Error("Network response was not ok");
+      // }
 
+      const responseData = await response;
+      console.log(responseData);
       // Add bot's response to the chat
       setMessages((prevMessages) => [
         ...prevMessages,
         {
           text:
-            responseData.botResponse || "Sorry, I couldn't understand that.",
+            response.data.botResponse || "Sorry, I couldn't understand that.",
           type: "bot-message",
         },
       ]);
@@ -86,8 +89,16 @@ const Carrergpt = () => {
     <div className="chat-container">
       <div className="chat-messages" ref={chatMessagesRef}>
         {messages.map((message, index) => (
-          <div key={index} className={`message ${message.type}`}>
-            {message.text}
+          <div
+            key={index}
+            className={`message ${message.type}`}
+            style={{ whiteSpace: "pre-line" }}
+          >
+            {message.type === "bot-message" ? (
+              <ReactMarkdown>{message.text}</ReactMarkdown> // Render Markdown
+            ) : (
+              message.text
+            )}
           </div>
         ))}
       </div>
