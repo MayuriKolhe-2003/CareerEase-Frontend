@@ -309,7 +309,9 @@ const Discussion = () => {
                       ) : (
                         <FaUserCircle className="w-10 h-10 text-gray-500" />
                       )}
+
                       <div className="flex flex-col">
+                        
                         <p className="text-sm font-semibold">
                           {comment.createdBy?.fullName || "Anonymous"}
                         </p>

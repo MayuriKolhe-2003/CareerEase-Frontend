@@ -1,8 +1,9 @@
-import React from "react";
+import React,{useEffect, useState} from "react";
 import { blogData, courseData } from "../Data";
 import CourseCard from "../components/CourseCard";
-
 const LearnSkills = () => {
+
+
   return (
     <div className="min-h-screen bg-gray-100 p-14">
       <h2 className="text-3xl text-center font-bold text-dark mb-6"> 🎯 Learn Skills</h2>
