@@ -114,7 +114,7 @@ const Goals = () => {
       <div className="bg-white shadow-md rounded-lg p-6 mb-6">
         <div className="flex justify-between items-center mb-4">
           <h3 className="text-2xl font-semibold text-dark">🎯 Goal Progress</h3>
-          <button onClick={() => setShowModal(true)} className="bg-primaryRed text-white px-4 py-2 rounded-lg flex items-center">
+          <button onClick={() => setShowModal(true)} className="bg-primaryRed text-white px-2 md:px-4 py-2 rounded-lg flex items-center ">
             <FiPlusCircle className="mr-2" /> Add Goal
           </button>
         </div>

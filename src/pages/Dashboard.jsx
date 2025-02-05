@@ -22,7 +22,7 @@ Chart.register(...registerables);
 
 const Dashboard = () => {
   return (
-    <div className="min-h-screen bg-gray-100 p-14">
+    <div className="min-h-screen bg-gray-100 p-4 md:p-16">
       <ToastContainer
         position="top-right"
         autoClose={3000}

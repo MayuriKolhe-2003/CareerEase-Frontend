@@ -6,25 +6,47 @@ const Navbar = () => {
   const location = useLocation(); // Get current route
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useState(!!localStorage.getItem("userId"));
+  const [profileImage, setProfileImage] = useState(localStorage.getItem("profileImageURL"));
   const dropdownRef = useRef(null); // Reference for dropdown
 
   useEffect(() => {
-    // Listen for authentication changes (e.g., login/logout)
-    const handleStorageChange = () => {
+    // Function to handle login status change
+    const handleAuthChange = () => {
       setIsAuthenticated(!!localStorage.getItem("userId"));
+      setProfileImage(localStorage.getItem("profileImageURL"));
     };
 
-    // Add event listener for changes in localStorage
-    window.addEventListener("storage", handleStorageChange);
+    // Listen for changes in localStorage and custom event
+    window.addEventListener("storage", handleAuthChange);
+    window.addEventListener("authChange", handleAuthChange); // Custom event
+    setDropdownOpen(false);
 
     return () => {
-      window.removeEventListener("storage", handleStorageChange);
+      window.removeEventListener("storage", handleAuthChange);
+      window.removeEventListener("authChange", handleAuthChange);
     };
   }, [location]);
 
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setDropdownOpen(false); // Close dropdown if clicked outside
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
   const handleLogout = () => {
     localStorage.removeItem("userId");
+    localStorage.removeItem("profileImageURL");
     setIsAuthenticated(false); // Update state
+    setProfileImage(null);
+    window.dispatchEvent(new Event("authChange")); // Dispatch event to update Navbar
     navigate("/");
   };
 
@@ -33,11 +55,11 @@ const Navbar = () => {
       <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
         {/* Logo */}
         <a href="/" className="flex items-center space-x-3 rtl:space-x-reverse">
-          <img
+          {/* <img
             src="https://flowbite.com/docs/images/logo.svg"
             className="h-8"
             alt="Flowbite Logo"
-          />
+          /> */}
           <span className="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">
             CareerEase
           </span>
@@ -53,7 +75,7 @@ const Navbar = () => {
                 className="flex items-center space-x-2"
               >
                 <img
-                  src="https://i.pravatar.cc/40" // Example profile picture
+                  src={profileImage || "default-avatar.png"} // Fallback avatar
                   alt="Profile"
                   className="w-10 h-10 ml-5 rounded-full border-2 border-gray-300"
                 />
@@ -89,7 +111,10 @@ const Navbar = () => {
             <Link
               to="/signin"
               className="text-white bg-primaryRed hover:bg-primaryRed focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 text-center dark:bg-primaryRed dark:hover:bg-primaryRed dark:focus:ring-primaryRed"
-              onClick={() => setIsAuthenticated(!!localStorage.getItem("userId"))} // Update after login
+              onClick={() => {
+                setIsAuthenticated(!!localStorage.getItem("userId"));
+                setProfileImage(localStorage.getItem("profileImageURL"));
+              }}
             >
               Sign In
             </Link>
@@ -102,12 +127,12 @@ const Navbar = () => {
           id="navbar-sticky"
         >
           <ul className="flex flex-col p-4 md:p-0 mt-4 font-medium border border-gray-100 rounded-lg bg-dark md:space-x-8 rtl:space-x-reverse md:flex-row md:mt-0 md:border-0 dark:border-gray-700 ">
-            {[
-              { path: "/dashboard", name: "Dashboard" },
+            {[{
+                path: "/dashboard", name: "Dashboard" },
               { path: "/careergpt", name: "CareerGPT" },
               { path: "/learnskills", name: "Learn Skills" },
               { path: "/opportunities", name: "Explore Opportunities" },
-              { path: "/discussions", name: "Discussions" },
+              { path: "/discussions", name: "Discussions" }
             ].map((link) => (
               <li key={link.path}>
                 <Link

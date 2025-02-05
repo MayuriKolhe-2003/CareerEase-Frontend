@@ -1,12 +1,11 @@
 import React from "react";
-import { FaClock } from "react-icons/fa";
 import { Link } from "react-router-dom";
 
 const CourseCard = ({ data, type }) => {
   return (
-    <div className="bg-white rounded-lg shadow-md flex flex-col h-[400px] w-[320px] flex-shrink-0">
+    <div className="bg-white rounded-lg shadow-md flex flex-col w-full max-w-[280px] sm:max-w-[320px] md:max-w-[350px] h-auto sm:h-[400px] flex-shrink-0">
       {/* Image */}
-      <img src={data.image} alt={data.title} className="w-full h-40 object-cover" />
+      <img src={data.image} alt={data.title} className="w-full h-32 sm:h-40 object-cover rounded-t-lg" />
 
       {/* Card Content */}
       <div className="p-4 flex flex-col flex-grow">
@@ -24,7 +23,9 @@ const CourseCard = ({ data, type }) => {
         <h4 className="text-lg font-semibold mt-2">{data.title}</h4>
 
         {/* Description */}
-        <p className="text-sm text-gray-600 mt-2 flex-grow">{data.description}</p>
+        <p className="text-sm text-gray-600 mt-2 flex-grow line-clamp-2">
+          {data.description}
+        </p>
 
         {/* Button at the Bottom */}
         <Link to={data.link}>

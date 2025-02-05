@@ -5,7 +5,7 @@ const LearnSkills = () => {
 
 
   return (
-    <div className="min-h-screen bg-gray-100 p-14">
+    <div className="min-h-screen bg-gray-100 p-4 md:p-16">
       <h2 className="text-3xl text-center font-bold text-dark mb-6"> 🎯 Learn Skills</h2>
 
       {/* Daily Challenge Section */}

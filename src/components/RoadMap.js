@@ -9,7 +9,7 @@ import {
 
 function TimelineWithIcons() {
   return (
-    <div className="max-w-screen mx-auto p-14 bg-white shadow-md m-10 rounded-md">
+    <div className="max-w-screen mx-auto p-6 md:p-14 bg-white shadow-md m-10 rounded-md">
       {/* Timeline container */}
       <h1 className="text-primaryRed font-bold text-3xl text-center mb-20">
         Learning Roadmap
